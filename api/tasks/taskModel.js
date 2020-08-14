@@ -1,4 +1,4 @@
-const db = require('../data/db-config')
+const db = require('../../data/db-config')
 
 module.exports = {
     getTasks,
@@ -10,12 +10,16 @@ module.exports = {
 
 function getTasks(id) {
     if(id){
-        return db('tasks')
-            .where({id})
+        return db('tasks as t')
+            .join('projects as p', 't.project_id', '=', 'p.id')
+            .select('p.name', 'p.description as project_description','t.*')
+            .where({'t.id': id})
             .first()
     }
     else{
-        return db('tasks')
+        return db('tasks as t')
+            .join('projects as p', 't.project_id', '=', 'p.id')
+            .select('p.name', 'p.description as project_description','t.*')
     }
 }
 
